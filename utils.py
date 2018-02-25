@@ -28,7 +28,8 @@ def index_data(sentences, dictionary):
 
 
 def get_train_data(vocabulary, batch_size, num_steps):
-    chars = list(set(vocabulary))
+    data, count, dictionary, reversed_dictionary = build_dataset(vocabulary, 5000)
+    chars = list(set(data))
     data_size = len(chars)
     print('data Size size', data_size)
     data_partition_size = data_size // batch_size
@@ -37,10 +38,10 @@ def get_train_data(vocabulary, batch_size, num_steps):
     data_x = np.zeros([batch_size, data_partition_size], dtype=np.int32)
     data_y = np.zeros([batch_size, data_partition_size], dtype=np.int32)
 
-    char_to_ix = {ch: i for i,ch in enumerate(vocabulary)}
-    ix_to_char = {i: ch for i,ch in enumerate(vocabulary)}
-    raw_x = [char_to_ix[ch] for ch in vocabulary]
-    raw_y = [char_to_ix[ch] for ch in vocabulary[1:]]
+    char_to_ix = {ch: i for i,ch in enumerate(data)}
+    ix_to_char = {i: ch for i,ch in enumerate(data)}
+    raw_x = [char_to_ix[ch] for ch in data]
+    raw_y = [char_to_ix[ch] for ch in data[1:]]
 
     for i in range(batch_size):
         data_x[i] = raw_x[data_partition_size * i:data_partition_size * (i + 1)]
