@@ -33,7 +33,7 @@ def get_train_data(vocabulary, batch_size, num_steps):
     raw_x = data
     raw_y.append(len(vocabulary)-1)
 
-    data_size = len(vocabulary)
+    data_size = len(data)
     print('data Size size', data_size)
     data_partition_size = data_size // batch_size
     print('data partition size', data_partition_size)
