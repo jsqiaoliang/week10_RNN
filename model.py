@@ -41,6 +41,7 @@ class Model():
 
         with tf.variable_scope('rnn'):
             state_size = self.dim_embedding
+
             def make_cell():
                 cell = tf.nn.rnn_cell.BasicLSTMCell(state_size)
                 # cell = tf.cond(self.keep_prob < 1, tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=self.keep_prob), cell)
@@ -65,7 +66,8 @@ class Model():
         with tf.variable_scope('softmax'):
             softmax_w = tf.get_variable("softmax_w", [state_size, self.num_words], initializer=tf.random_normal_initializer(stddev=0.01))
             softmax_b = tf.get_variable("softmax_b", [self.num_words], initializer=tf.constant_initializer(0.0))
-            logits = tf.nn.xw_plus_b(seq_output_final, softmax_w, softmax_b)
+            logits = tf.reshape(tf.matmul(tf.reshape(seq_output_final, [-1, state_size]), softmax_w) +
+                                softmax_b,[self.batch_size, self.num_steps, 5000])
 
         tf.summary.histogram('logits', logits)
 
