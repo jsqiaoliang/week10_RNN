@@ -47,20 +47,21 @@ class Model():
                 # cell = tf.cond(self.keep_prob < 1, tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=self.keep_prob), cell)
                 # if self.keep_prob < 1:
                 #     cell = tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=self.keep_prob)
+                cell = tf.nn.rnn_cell.DropoutWrapper(cell, output_keep_prob=self.keep_prob)
                 return cell
 
             stacked_lstm = tf.contrib.rnn.MultiRNNCell([make_cell() for _ in range(self.rnn_layers)])
             self.state_tensor = state = stacked_lstm.zero_state(self.batch_size, tf.float32)
             seq_output = []
-            for step in range(self.num_steps):
-                if step > 0: tf.get_variable_scope().reuse_variables()
-                outputs, state = stacked_lstm(inputs[:,step, :],state)
-                print("Outputs ",outputs)
-                print("State", state)
-                seq_output.append(outputs)
+            # for step in range(self.num_steps):
+            #     if step > 0: tf.get_variable_scope().reuse_variables()
+            #     outputs, state = stacked_lstm(inputs[:,step, :],state)
+            #     seq_output.append(outputs)
+        outputs_tensor, self.outputs_state_tensor = tf.nn.dynamic_rnn(stacked_lstm, data, initial_state=self.state_tensor)
+
             # seq_output = tf.reshape(tf.concat(outputs, 1), [-1, state_size])
         # concate every time step
-        # seq_output = tf.concat(outputs_tensor, 1)
+        seq_output = tf.concat(outputs_tensor, 1)
 
         # flatten it
         seq_output_final = tf.reshape(seq_output, [-1, self.dim_embedding])
