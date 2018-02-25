@@ -29,8 +29,8 @@ def index_data(sentences, dictionary):
 
 def get_train_data(vocabulary, batch_size, num_steps):
     data, count, dictionary, reversed_dictionary = build_dataset(vocabulary, 5000)
-    chars = list(set(data))
-    data_size = len(chars)
+    # chars = list(set(data))
+    data_size = len(data)
     print('data Size size', data_size)
     data_partition_size = data_size // batch_size
     print('data partition size', data_partition_size)
