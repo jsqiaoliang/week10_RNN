@@ -43,8 +43,9 @@ class Model():
             state_size = self.dim_embedding
             def make_cell():
                 cell = tf.nn.rnn_cell.BasicLSTMCell(state_size)
-                if self.keep_prob < 1:
-                    cell = tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=self.keep_prob)
+                cell = tf.cond(self.keep_prob < 1, lambda: tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=self.keep_prob), cell)
+                # if self.keep_prob < 1:
+                #     cell = tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=self.keep_prob)
                 return cell
 
             stacked_lstm = tf.contrib.rnn.MultiRNNCell([make_cell() for _ in range(self.rnn_layers)])
