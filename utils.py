@@ -30,6 +30,7 @@ def index_data(sentences, dictionary):
 def get_train_data(vocabulary, batch_size, num_steps):
     chars = list(set(vocabulary))
     data_size = len(chars)
+    print('data Size size', data_size)
     data_partition_size = data_size // batch_size
     print('data partition size', data_partition_size)
 

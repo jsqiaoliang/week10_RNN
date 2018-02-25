@@ -49,16 +49,16 @@ class Model():
                 #     cell = tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=self.keep_prob)
                 return cell
 
-            stacked_lstm = tf.contrib.rnn.MultiRNNCell([make_cell() for _ in range(self.rnn_layers)])
-            self.state_tensor = state = stacked_lstm.zero_state(self.batch_size, tf.float32)
-            seq_output = []
-            for step in range(self.num_steps):
-                if step > 0: tf.get_variable_scope().reuse_variables()
-                outputs, state = stacked_lstm(data[:,step, :],state)
-                seq_output.append(outputs)
+            outputs_tensor = tf.contrib.rnn.MultiRNNCell([make_cell() for _ in range(self.rnn_layers)])
+            self.state_tensor = state = outputs_tensor.zero_state(self.batch_size, tf.float32)
+            # seq_output = []
+            # for step in range(self.num_steps):
+            #     if step > 0: tf.get_variable_scope().reuse_variables()
+            #     outputs, state = stacked_lstm(data[:,step, :],state)
+            #     seq_output.append(outputs)
             # seq_output = tf.reshape(tf.concat(outputs, 1), [-1, state_size])
         # concate every time step
-        # seq_output = tf.concat(outputs_tensor, 1)
+        seq_output = tf.concat(outputs_tensor, 1)
 
         # flatten it
         seq_output_final = tf.reshape(seq_output, [-1, self.dim_embedding])
