@@ -38,12 +38,12 @@ class Model():
                 tf.summary.histogram('embed', embed)
 
             data = tf.nn.embedding_lookup(embed, self.X)
-
+        outputs_tensor = []
         with tf.variable_scope('rnn'):
             state_size = self.dim_embedding
             # inputs = tf.one_hot(self.X, 5000)
             def make_cell():
-                cell = tf.nn.rnn_cell.BasicLSTMCell(state_size)
+                cell = tf.nn.rnn_cell.BasicLSTMCell(state_size, forget_bias=0.0, state_is_tuple=True)
                 # cell = tf.cond(self.keep_prob < 1, tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=self.keep_prob), cell)
                 # if self.keep_prob < 1:
                 #     cell = tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=self.keep_prob)
@@ -51,7 +51,7 @@ class Model():
                 return cell
 
             stacked_lstm = tf.contrib.rnn.MultiRNNCell([make_cell() for _ in range(self.rnn_layers)])
-            self.state_tensor = state = stacked_lstm.zero_state(self.batch_size, tf.float32)
+            self.state_tensor = stacked_lstm.zero_state(self.batch_size, tf.float32)
             seq_output = []
             # for step in range(self.num_steps):
             #     if step > 0: tf.get_variable_scope().reuse_variables()
@@ -65,12 +65,13 @@ class Model():
 
         # flatten it
         seq_output_final = tf.reshape(seq_output, [-1, self.dim_embedding])
-        self.outputs_state_tensor = state
+
         with tf.variable_scope('softmax'):
             softmax_w = tf.get_variable("softmax_w", [state_size, self.num_words], initializer=tf.random_normal_initializer(stddev=0.01))
             softmax_b = tf.get_variable("softmax_b", [self.num_words], initializer=tf.constant_initializer(0.0))
-            logits = tf.reshape(tf.matmul(tf.reshape(seq_output_final, [-1, state_size]), softmax_w) +
-                                softmax_b,[self.batch_size, self.num_steps, 5000])
+            # logits = tf.reshape(tf.matmul(tf.reshape(seq_output_final, [-1, state_size]), softmax_w) +
+            #                     softmax_b,[self.batch_size, self.num_steps, 5000])
+            logits = tf.matmul(seq_output_final, softmax_w) + softmax_b
 
         tf.summary.histogram('logits', logits)
 
