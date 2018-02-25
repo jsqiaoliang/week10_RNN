@@ -41,8 +41,7 @@ class Model():
 
         with tf.variable_scope('rnn'):
             state_size = self.dim_embedding
-            # inputs = tf.one_hot(data, 5000)
-
+            inputs = tf.one_hot(self.X, 5000)
             def make_cell():
                 cell = tf.nn.rnn_cell.BasicLSTMCell(state_size)
                 # cell = tf.cond(self.keep_prob < 1, tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=self.keep_prob), cell)
@@ -55,7 +54,7 @@ class Model():
             seq_output = []
             for step in range(self.num_steps):
                 if step > 0: tf.get_variable_scope().reuse_variables()
-                outputs, state = stacked_lstm(data[:,step, :],state)
+                outputs, state = stacked_lstm(inputs[:,step, :],state)
                 print("Outputs ",outputs)
                 print("State", state)
                 seq_output.append(outputs)
