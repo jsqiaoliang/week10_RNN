@@ -13,7 +13,7 @@ from utils import read_data
 
 from flags import parse_args
 FLAGS, unparsed = parse_args()
-
+import numpy as np
 
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s', level=logging.DEBUG)
@@ -28,10 +28,10 @@ with open(FLAGS.dictionary, encoding='utf-8') as inf:
 
 with open(FLAGS.reverse_dictionary, encoding='utf-8') as inf:
     reverse_dictionary = json.load(inf, encoding='utf-8')
-
+embedding_file = np.load('./embedding.npy')
 
 model = Model(learning_rate=FLAGS.learning_rate, batch_size=FLAGS.batch_size, num_steps=FLAGS.num_steps)
-model.build()
+model.build(embedding_file = embedding_file)
 
 
 with tf.Session() as sess:
