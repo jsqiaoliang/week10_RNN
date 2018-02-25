@@ -61,6 +61,8 @@ except ImportError as ex:
 
 In the end, use TSNE method to lower the dimension from 128 to 2. So that we can see the distribution of words on X and Y coordinate (2 dimension). The similar related words are placed at the similar position of the graph as follow:
 
+![alt text](./embedding_tsne.png "embedding tsne")
+
 
 
 The Details of code are shown in Word Embedding.ipynb of the repository
