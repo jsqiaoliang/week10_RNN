@@ -61,7 +61,7 @@ class Model():
 
         # flatten it
         seq_output_final = tf.reshape(seq_output, [-1, self.dim_embedding])
-
+        self.outputs_state_tensor = state
         with tf.variable_scope('softmax'):
             softmax_w = tf.get_variable("softmax_w", [state_size, self.num_words], initializer=tf.random_normal_initializer(stddev=0.01))
             softmax_b = tf.get_variable("softmax_b", [self.num_words], initializer=tf.constant_initializer(0.0))
