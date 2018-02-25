@@ -53,8 +53,7 @@ with tf.Session() as sess:
     for x in range(1):
         logging.debug('epoch [{0}]....'.format(x))
         state = sess.run(model.state_tensor)
-        for dl in utils.get_train_data(vocabulary, batch_size=FLAGS.batch_size, num_steps=FLAGS.num_steps):
-            x, y = dl
+        for step, (x,y) in utils.get_train_data(vocabulary, batch_size=FLAGS.batch_size, num_steps=FLAGS.num_steps):
             feed_dict = {model.X: x, model.Y: y,model.state_tensor:state, model.keep_prob: 0.6}
             gs, _, state, l, summary_string = sess.run(
                 [model.global_step, model.optimizer, model.outputs_state_tensor, model.loss, model.merged_summary_op], feed_dict=feed_dict)
