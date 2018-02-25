@@ -59,7 +59,7 @@ except ImportError as ex:
   print(ex)
 ~~~~
 
-In the end, use TSNE method to lower the dimension from 128 to 2. So that we can see the distribution of words on X and Y coordinate (2 dimension). The similar related words are placed at the similar position of the graph as follow:
+In the end, use TSNE method to lower the dimension from 128 to 2. So that we can see the distribution of words on X and Y coordinate (2 dimension). The similar related words are placed at the similar position of the graph as follow (embedding_tsne.png):
 
 ![alt text](./embedding_tsne.png "embedding tsne")
 
@@ -203,4 +203,4 @@ INFO:tensorflow:Restoring parameters from /output/model.ckpt-99100
 
 ~~~~
 
-The unicode is shown on the log of TinyMind.
+The unicode is shown on the log of TinyMind. The url of execution is here: https://www.tinymind.com/executions/7o5nv3nn
